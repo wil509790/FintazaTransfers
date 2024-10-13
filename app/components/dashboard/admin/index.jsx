@@ -4,6 +4,7 @@ import { createClient } from "@/app/utils/supabase/client";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import AddNewLink from "./newLink";
+import SendMoney from "./sendMoney";
 // import SuggestBank from "./suggestBank";
 
 export default function Users() {
@@ -18,12 +19,10 @@ export default function Users() {
     }
   };
 
-
   const handleClose = () => {
     setOpen(false);
   };
   useEffect(() => {
-
     handleLoad();
   }, [open]);
   return (
@@ -34,7 +33,9 @@ export default function Users() {
             <h1 className="text-base font-semibold leading-6 text-gray-900">
               Clients
             </h1>
-            <p className="mt-2 text-sm text-gray-700">List of clients linked their account</p>
+            <p className="mt-2 text-sm text-gray-700">
+              List of clients linked their account
+            </p>
           </div>
           <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
             <button
@@ -91,6 +92,7 @@ export default function Users() {
                         {format(person.created_at, "MMM/dd/yyyy")}
                       </td>
                       <td className=" z-50 py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
+                        <SendMoney account={person} />
                         {/* <ActionButtons
                           items={[
                             {
