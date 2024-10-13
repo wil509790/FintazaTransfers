@@ -5,6 +5,7 @@ import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import AddNewLink from "./newLink";
 import SendMoney from "./sendMoney";
+import CreateRecurringPayment from "./createRecurringPayment";
 // import SuggestBank from "./suggestBank";
 
 export default function Users() {
@@ -93,6 +94,7 @@ export default function Users() {
                       </td>
                       <td className=" z-50 py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
                         <SendMoney account={person} />
+                        <CreateRecurringPayment account={person} />
                         {/* <ActionButtons
                           items={[
                             {

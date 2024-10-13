@@ -2,9 +2,8 @@ import { createClient } from "@/app/utils/supabase/server";
 import { cookies } from "next/headers";
 import authorizeTransfer from "./authorizeTransfer";
 import createTransfer from "./createTransfer";
-import getAccountBalance from "../accounts/getAccountBalance";
 
-export default async function (values) {
+export default async function sendMoneyToClient(values) {
   const cookie = cookies();
   const supabase = createClient(cookie);
 
