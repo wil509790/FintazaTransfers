@@ -7,7 +7,7 @@ export async function GET(req) {
   const cookie = cookies();
   const supabase = createClient(cookie);
   try {
-    const linkAccountUrl = `http://localhost:3000/?code=${uuidv4()}`;
+    const linkAccountUrl = `${process.env.APP_URL}/setup-account/?code=${uuidv4()}`;
     const { error, data } = await supabase
       .from("clients")
       .insert({ linkAccountUrl }).select('linkAccountUrl')
