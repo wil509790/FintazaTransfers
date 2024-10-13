@@ -9,7 +9,7 @@ export default function SignOutButton() {
   const signOut = async () => {
     const { error } = await supabase.auth.signOut();
     if (!error) {
-      router.push("/signin");
+      router.push("/");
     }
   };
 

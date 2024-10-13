@@ -1,9 +1,9 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createClient } from "../utils/supabase/client";
+import { createClient } from "@/app/utils/supabase/client";
 
-export default function Register() {
+export default function SignIn() {
   const [values, setValues] = useState();
   const [error, setError] = useState();
   const [loading, setLoading] = useState(false);
