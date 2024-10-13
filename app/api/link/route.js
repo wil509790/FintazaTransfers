@@ -7,10 +7,11 @@ export async function GET(req) {
   const cookie = cookies();
   const supabase = createClient(cookie);
   try {
-    const linkAccountUrl = `${process.env.APP_URL}/setup-account/?code=${uuidv4()}`;
+    const code = uuidv4()
+    const linkAccountUrl = `${process.env.APP_URL}/setup-account/?code=${code}`;
     const { error, data } = await supabase
       .from("clients")
-      .insert({ linkAccountUrl }).select('linkAccountUrl')
+      .insert({ linkAccountUrl, code }).select('linkAccountUrl')
     return NextResponse.json(data[0]);
   } catch (e) {
     throw e;
