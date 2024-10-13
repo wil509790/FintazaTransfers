@@ -5,7 +5,7 @@ export default async function SetupAccountPage() {
   return (
     <Suspense>
       Working on this...
-      {/* <SetupAccountComponent /> */}
+      <SetupAccountComponent />
     </Suspense>
   );
 }
