@@ -113,8 +113,8 @@ export default function Users() {
                         {format(person.created_at, "MMM/dd/yyyy HH:mm")}
                       </td>
                       <td className=" z-50 py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                        <SendMoney account={person} />
-                        <CreateRecurringPayment account={person} />
+                        {/* <SendMoney account={person} />
+                        <CreateRecurringPayment account={person} /> */}
                         {/* <ActionButtons
                           items={[
                             {
