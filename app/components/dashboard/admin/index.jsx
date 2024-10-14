@@ -1,20 +1,19 @@
 "use client";
 import Modal from "@/app/components/modal";
-import { createClient } from "@/app/utils/supabase/client";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import AddNewLink from "./newLink";
 import SendMoney from "./sendMoney";
 import CreateRecurringPayment from "./createRecurringPayment";
+import axios from "axios";
 // import SuggestBank from "./suggestBank";
 
 export default function Users() {
   const [clients, setClients] = useState([]);
   const [open, setOpen] = useState(false);
-  const supabase = createClient();
 
   const handleLoad = async () => {
-    let { data, error } = await supabase.from("clients").select();
+    let { data, error } = await axios.get('/api/clients')
     if (data?.length) {
       setClients(data);
     }
@@ -58,13 +57,28 @@ export default function Users() {
                       scope="col"
                       className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                     >
-                      Name
+                    Bank Name
                     </th>
                     <th
                       scope="col"
                       className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                     >
-                      Email
+                     Account Type
+
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                    >
+                    Client Name
+                     
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                    >
+                    Client Email
+                     
                     </th>
                     <th
                       scope="col"
@@ -84,13 +98,19 @@ export default function Users() {
                   {clients.map((person) => (
                     <tr key={person.id}>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                        {person?.bankName}
+                      </td>
+                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                        {person?.accountType}
+                      </td>
+                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                         {person?.name}
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                         {person?.email}
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                        {format(person.created_at, "MMM/dd/yyyy")}
+                        {format(person.created_at, "MMM/dd/yyyy HH:mm")}
                       </td>
                       <td className=" z-50 py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
                         <SendMoney account={person} />

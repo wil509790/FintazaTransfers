@@ -5,26 +5,27 @@ import { usePathname } from "next/navigation";
 import SignOutButton from "./signoutButton";
 
 const navigation = [
-  { name: "Home", href: "/", icon: HomeIcon },
-  { name: "Accounts", href: "/accounts", icon: BanknotesIcon },
+  { name: "Clients", href: "/dashboard", icon: HomeIcon },
+  // { name: "Transfers", href: "/dashboard/transfers", icon: BanknotesIcon },
 ];
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function Sidebar({user, children }) {
+export default function Sidebar({ user, children }) {
   const pathname = usePathname();
 
   return (
     <div className="flex">
       <div className="flex grow h-screen w-64 max-w-64 flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6">
         <div className="flex h-16 shrink-0 items-center">
-          <img
+          {/* <img
             alt="Your Company"
-            src="/images/logo.webp"
+            src="/images/logo.png"
             className="h-8 w-auto"
-          />
+          /> */}
+          Your Logo
         </div>
         <nav className="flex flex-1 flex-col">
           <ul role="list" className="flex flex-1 flex-col gap-y-7">
@@ -72,9 +73,7 @@ export default function Sidebar({user, children }) {
                 </span>
               </a>
               {pathname === "/" && (
-                <div
-                  className="flex items-center cursor-pointer gap-x-4 px-4 py-3 text-sm font-semibold leading-6 text-gray-900 hover:bg-gray-50"
-                >
+                <div className="flex items-center cursor-pointer gap-x-4 px-4 py-3 text-sm font-semibold leading-6 text-gray-900 hover:bg-gray-50">
                   <svg
                     className={"text-red-500 size-6"}
                     xmlns="http://www.w3.org/2000/svg"
