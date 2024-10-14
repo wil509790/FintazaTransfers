@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import { createClient } from "@/app/utils/supabase/server";
 import { getBankDetails } from "./getBankDetails";
 import { checkRTPEligibility } from "./checkRTPEligibility";
+import getIdentity from "./getIdentity";
 
 export async function POST(req) {
   const cookie = cookies();
@@ -23,6 +24,14 @@ export async function POST(req) {
       });
     }
     const bank = await getBankDetails(body.institution.institution_id);
+    const identity = await getIdentity(token);
+    let holderName = "";
+    let email = "";
+    if (identity?.accounts?.length > 0) {
+      const account = identity?.accounts[0];
+      holderName = account.owners[0].names[0];
+      email = account.owners[0].emails[0].data;
+    }
     const { error } = await supabase
       .from("clients")
       .update({
@@ -31,9 +40,11 @@ export async function POST(req) {
         bankName: body.institution.name,
         itemId: exchange.item_id,
         linkUsed: true,
-        name: body.account?.name,
+        name: holderName,
+        email,
         bankLogo: bank?.logo,
         accountId: account.id,
+        accountType: account?.subtype,
       })
       .eq("code", body.code);
     return NextResponse.json({});
