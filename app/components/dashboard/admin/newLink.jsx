@@ -7,11 +7,16 @@ export default function AddUser({ handleClose }) {
   const [copied, setCopied] = useState(false);
 
   const handleGenerateLink = async () => {
-    const { data } = await axios.get("/api/link");
-    if (data?.linkAccountUrl) {
-      setLink(data.linkAccountUrl);
+    setBusy(true);
+    try {
+      const { data } = await axios.get("/api/link");
+      if (data?.linkAccountUrl) {
+        setLink(data.linkAccountUrl);
+      }
+    } catch (e) {
+    } finally {
+      setBusy(false);
     }
-    console.log(data);
   };
 
   const copyToClipboard = () => {
@@ -22,28 +27,32 @@ export default function AddUser({ handleClose }) {
   };
 
   return (
-    <div className="w-full">
+    <div className="w-[500px]">
       <div>
         <div>
-          generate a link
-          <div class="max-w-xs mx-auto mt-5">
-            <div class="flex items-center bg-gray-200 border border-gray-300 rounded-md p-2">
-              <input
-                id="urlInput"
-                type="text"
-                value={link}
-                disabled
-                readonly
-                class="flex-grow  px-2 py-1 border-none focus:ring-0 focus:outline-none text-gray-700"
-              />
-              <button
-                onClick={copyToClipboard}
-                class="ml-2 px-3 py-1 bg-blue-500 text-white text-sm font-medium rounded-md hover:bg-blue-600"
-              >
-                {copied ? "Copied" : "Copy"}
-              </button>
+          {link
+            ? `Your secure account linking link has been generated. Click 'Copy' to send the link to your client and help them connect their account for recurring payments or loan disbursements.`
+            : `Click the button below to generate a secure account linking link for the client. This link will allow the client to connect their account for recurring payments or loan disbursements.`}
+          {link && (
+            <div class="w-full  mx-auto mt-5">
+              <div class="flex h-10 items-center bg-gray-50/45 border border-gray-300 rounded-md p-2">
+                <input
+                  id="urlInput"
+                  type="text"
+                  value={link}
+                  disabled
+                  readonly
+                  class="flex-grow  px-2 py-1 border-none focus:ring-0 focus:outline-none text-gray-700"
+                />
+                <button
+                  onClick={copyToClipboard}
+                  class="ml-2 px-3 py-1 bg-white text-black text-sm font-medium rounded-md hover:bg-gray-200"
+                >
+                  {copied ? "Copied" : "Copy"}
+                </button>
+              </div>
             </div>
-          </div>
+          )}
         </div>
         <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
           <button
@@ -52,7 +61,7 @@ export default function AddUser({ handleClose }) {
             onClick={handleGenerateLink}
             className="inline-flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm  sm:ml-3 sm:w-auto"
           >
-            Continue
+            Generate
           </button>
           <button
             type="button"

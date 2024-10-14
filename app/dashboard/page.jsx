@@ -4,6 +4,7 @@ import SignOutButton from "../components/signoutButton";
 import DashboardComponent from "../components/dashboard";
 import { useEffect, useState } from "react";
 import { createClient } from "../utils/supabase/client";
+import Sidebar from "../components/sidebar";
 
 export default function Dashboard() {
   const [user, setUser] = useState();
@@ -24,11 +25,9 @@ export default function Dashboard() {
   if (user)
     return (
       <div className="h-screen ">
-        <div className="flex justify-end gap-5 items-center mt-2 pr-10">
-          <h2>{user.email}</h2>
-          <SignOutButton />
-        </div>
-        <DashboardComponent user={user} />
+        <Sidebar user={user}>
+          <DashboardComponent user={user} />
+        </Sidebar>
       </div>
     );
 }
