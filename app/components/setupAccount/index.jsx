@@ -12,6 +12,10 @@ export default function SetupAccountComponent() {
   const code = params.get("code");
 
   const handleGetToken = async () => {
+    if(!code){
+      setError("Invalid request, the link might be broken");
+      return
+    }
     setError("");
     setSuccess("");
     try {
@@ -23,18 +27,21 @@ export default function SetupAccountComponent() {
         setError(data?.message);
       }
     } catch (e) {
-      setError("There was something wrong, please try again");
+      setError("There was something wrong, the link might be expired");
     }
   };
   return (
-    <main className="flex min-h-screen bg-white items-center justify-between ">
+    <main className="flex min-h-screen bg-white ">
       {/* <div className="flex items-center justify-center gap-5"></div> */}
-      <div className="mx-auto max-w-7xl lg:grid lg:grid-cols-12 lg:gap-x-8 lg:px-8">
-        <div className="px-6 pb-24 pt-10 sm:pb-32 lg:col-span-7 lg:px-0 lg:pb-56 lg:pt-48 xl:col-span-6">
+      <div className=" max-w-7xl lg:grid lg:grid-cols-12 lg:gap-x-8 lg:px-8">
+        <div className="px-6 pb-24 ml-10 pt-10 sm:pb-32 lg:col-span-7 lg:px-0 lg:pb-56 lg:pt-48 xl:col-span-6">
           <div className="mx-auto max-w-2xl lg:mx-0">
-            Your logo
+            <h3 className=" font-extrabold">Your logo</h3>
             <p className="mt-6 text-lg leading-8 text-gray-600">
-              Open your account to see your cleints, payments and more
+              Link your account to securely borrow and lend money through
+              Fintaza Group Financial. By linking your account, the platform can
+              charge recurring payments or send funds directly to your account
+              for lending purposes.
             </p>
             {error && (
               <p className="mt-6 text-lg leading-8 text-red-500">{error}</p>
