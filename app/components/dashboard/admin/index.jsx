@@ -6,6 +6,7 @@ import AddNewLink from "./newLink";
 import SendMoney from "./sendMoney";
 import CreateRecurringPayment from "./createRecurringPayment";
 import axios from "axios";
+import Image from "next/image";
 // import SuggestBank from "./suggestBank";
 
 export default function Users() {
@@ -13,7 +14,7 @@ export default function Users() {
   const [open, setOpen] = useState(false);
 
   const handleLoad = async () => {
-    let { data, error } = await axios.get('/api/clients')
+    let { data, error } = await axios.get("/api/clients");
     if (data?.length) {
       setClients(data);
     }
@@ -57,28 +58,25 @@ export default function Users() {
                       scope="col"
                       className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                     >
-                    Bank Name
+                      Bank Name
                     </th>
                     <th
                       scope="col"
                       className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                     >
-                     Account Type
-
+                      Account Type
                     </th>
                     <th
                       scope="col"
                       className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                     >
-                    Client Name
-                     
+                      Client Name
                     </th>
                     <th
                       scope="col"
                       className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                     >
-                    Client Email
-                     
+                      Client Email
                     </th>
                     <th
                       scope="col"
@@ -97,7 +95,17 @@ export default function Users() {
                 <tbody className="divide-y divide-gray-200">
                   {clients.map((person) => (
                     <tr key={person.id}>
-                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                      <td className="whitespace-nowrap flex justify-start gap-x-2 px-3 py-4 text-sm text-gray-500">
+                        {person?.bankLogo && (
+                          <Image
+                            loader={() => person?.bankLogo + ""}
+                            width={0}
+                            height={0}
+                            className="h-5 w-5 rounded-full"
+                            alt={person?.bankName + ""}
+                            src={`data:image/png;base64,${person?.bankLogo}`}
+                          />
+                        )}
                         {person?.bankName}
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
