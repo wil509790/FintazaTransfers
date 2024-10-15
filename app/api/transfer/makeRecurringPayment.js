@@ -23,7 +23,7 @@ export default async function makeRecurringPayment(values) {
     .eq("accountId", values.accountId)
     .single();
 
-  let transactionId = uuidv4();
+  let transaction_id = uuidv4();
 
   const currentBalance = await getAccountBalance(client?.accessToken, [
     client.accountId,
@@ -36,7 +36,7 @@ export default async function makeRecurringPayment(values) {
     access_token: client?.accessToken,
     account_id: client?.accountId,
     amount: Number(values.amount),
-    client_transaction_id: transactionId,
+    client_transaction_id: transaction_id,
   });
   if (evaluate !== "success") {
     return evaluate;
@@ -56,11 +56,15 @@ export default async function makeRecurringPayment(values) {
     },
     schedule: getSchedule(values.frequency),
     description: "debit",
-    idempotency_key: uuidv4(),
+    idempotency_key: transaction_id,
   });
 
   if (data?.decision === "approved") {
-    signalDecisionReport(transactionId);
+    await supabase
+      .from("transactions")
+      .insert({ client_id: client?.id, transaction_id });
+    console.log(error);
+    signalDecisionReport(transaction_id);
     return 200;
   } else {
     return data?.decision_rationale?.description;
