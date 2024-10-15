@@ -1,13 +1,16 @@
 import {
-    plaidBaseUrl,
-    plaidClient,
-    plaidSecret,
+  plaidBaseUrl,
+  plaidClient,
+  plaidSecret,
 } from "@/app/services/plaidConfig";
 import { createClient } from "@/app/utils/supabase/server";
 import axios from "axios";
 import { addYears, format } from "date-fns";
 import { cookies } from "next/headers";
 import { v4 as uuidv4 } from "uuid";
+import evaluateSignal from "./signal/evaluate";
+import getAccountBalance from "../accounts/getAccountBalance";
+import signalDecisionReport from "./signal/decisionReport";
 
 export default async function makeRecurringPayment(values) {
   const cookie = cookies();
@@ -20,17 +23,36 @@ export default async function makeRecurringPayment(values) {
     .eq("accountId", values.accountId)
     .single();
 
+  let transactionId = uuidv4();
+
+  const currentBalance = await getAccountBalance(client?.accessToken, [
+    client.accountId,
+  ]);
+  if (currentBalance < Number(values?.amount)) {
+    return "The select account has not sufficient balance";
+  }
+
+  const evaluate = await evaluateSignal({
+    access_token: client?.accessToken,
+    account_id: client?.accountId,
+    amount: Number(values.amount),
+    client_transaction_id: transactionId,
+  });
+  if (evaluate !== "success") {
+    return evaluate;
+  }
+
   let { data } = await axios.post(`${plaidBaseUrl}/transfer/recurring/create`, {
     client_id: plaidClient,
     secret: plaidSecret,
     access_token: client?.accessToken,
     account_id: values.accountId,
     type: "debit",
-    network: "ach",
+    network: "same-day-ach",
     ach_class: "ppd",
     amount: Number(values.amount).toFixed(2),
     user: {
-      legal_name: "Test",
+      legal_name: client?.name,
     },
     schedule: getSchedule(values.frequency),
     description: "debit",
@@ -38,6 +60,7 @@ export default async function makeRecurringPayment(values) {
   });
 
   if (data?.decision === "approved") {
+    signalDecisionReport(transactionId);
     return 200;
   } else {
     return data?.decision_rationale?.description;

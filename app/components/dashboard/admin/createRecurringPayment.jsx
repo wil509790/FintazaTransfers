@@ -26,7 +26,7 @@ export default function CreateRecurringPayment({ account }) {
         if (data?.status === "success") {
           resetForm();
           setSuccess(
-            "Transfer created. Please check transactions page for updates"
+            "Transfer created successfully"
           );
         } else {
           setErrors({ response: data?.message });
