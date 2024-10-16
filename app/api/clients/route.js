@@ -12,13 +12,13 @@ export async function GET(req) {
     return NextResponse.json(
       { message: "User not authorized" },
       { status: 403 }
-    );
+  );
   }
   try {
     const { error, data } = await supabase
       .from("clients")
       .select(
-        "name, created_at, accountId, bankName, linkUsed, id, accountType, email, bankLogo"
+        "name, created_at, accountId, bankName, linkUsed, id, accountType, email, bankLogo, rtpSupport"
       )
       .eq("linkUsed", true);
     return NextResponse.json(data);

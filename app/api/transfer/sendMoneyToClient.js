@@ -18,7 +18,8 @@ export default async function sendMoneyToClient(values) {
     access_token: client?.accessToken,
     account_id: values.accountId,
     type: "credit",
-    network: "rtp",
+    network: client?.rtpSupport ? "rtp" : 'ach',
+    ...(client?.rtpSupport ? {} : {ach_class: 'web'}),
     amount: Number(values.amount).toFixed(2),
     user: {
       legal_name: "Test",

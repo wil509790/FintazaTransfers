@@ -16,13 +16,6 @@ export async function POST(req) {
     const account = body.account;
 
     const rtpSupport = await checkRTPEligibility(token, account?.id);
-    if (!rtpSupport) {
-      return NextResponse.json({
-        status: "RTP_NOT_SUPPORTED",
-        message:
-          "Your account is not supporting Real Time Payments, please select another account",
-      });
-    }
     const bank = await getBankDetails(body.institution.institution_id);
     const identity = await getIdentity(token);
     let holderName = "";
@@ -45,6 +38,7 @@ export async function POST(req) {
         bankLogo: bank?.logo,
         accountId: account.id,
         accountType: account?.subtype,
+        rtpSupport
       })
       .eq("code", body.code);
     return NextResponse.json({});

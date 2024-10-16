@@ -26,9 +26,7 @@ export default function SendMoney({ account }) {
         });
         if (data?.status === "success") {
           resetForm();
-          setSuccess(
-            "Transfer created. Please check transactions page for updates"
-          );
+          setSuccess("Transfer created successfully");
         } else {
           setErrors({ response: data?.message });
         }
@@ -45,7 +43,9 @@ export default function SendMoney({ account }) {
   };
   return (
     <div>
-      <button onClick={() => setOpen(true)}>send money</button>
+      <button onClick={() => setOpen(true)}>{`Send Funds by ${
+        account?.rtpSupport ? "RTP" : "ACH"
+      }`}</button>
       <Modal open={open} setOpen={setOpen}>
         <form
           className="space-y-6 w-96"
