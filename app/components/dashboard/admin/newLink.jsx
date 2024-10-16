@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
 
-export default function AddUser({ handleClose }) {
+export default function AddNewLink({ handleClose }) {
   const [link, setLink] = useState();
   const [busy, setBusy] = useState(false);
   const [copied, setCopied] = useState(false);

@@ -14,7 +14,7 @@ export const RECURRING_PAYMENT_SCHEMA = yup.object({
     .typeError("Invalid value, must be number")
     .moreThan(0, "Amount must be more than $0")
     .required("Amount is required"),
-  frequency: yup
-    .string()
-    .required("Frequency is required"),
+  frequency: yup.string().required("Frequency is required"),
+  startDate: yup.string().required("Start Date is required"),
+  endDate: yup.string().required("End Date is required"),
 });

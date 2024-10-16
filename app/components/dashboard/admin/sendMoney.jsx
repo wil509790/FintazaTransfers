@@ -43,9 +43,10 @@ export default function SendMoney({ account }) {
   };
   return (
     <div>
-      <button onClick={() => setOpen(true)}>{`Send Funds by ${
-        account?.rtpSupport ? "RTP" : "ACH"
-      }`}</button>
+      <button
+        className=" rounded-md bg-indigo-600 px-2 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+        onClick={() => setOpen(true)}
+      >{`Send Funds by ${account?.rtpSupport ? "RTP" : "ACH"}`}</button>
       <Modal open={open} setOpen={setOpen}>
         <form
           className="space-y-6 w-96"
