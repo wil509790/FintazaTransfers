@@ -18,7 +18,7 @@ export async function GET(req) {
     const { error, data } = await supabase
       .from("clients")
       .select(
-        "name, created_at, accountId, bankName, linkUsed, id, accountType, email, bankLogo, rtpSupport"
+        "name, created_at, accountId, bankName, statements, linkUsed, id, accountType, email, bankLogo, rtpSupport"
       )
       .eq("linkUsed", true);
     return NextResponse.json(data);

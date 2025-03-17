@@ -1,14 +1,16 @@
 "use client";
 import Modal from "@/app/components/modal";
+import axios from "axios";
 import { format } from "date-fns";
+import Image from "next/image";
 import { useEffect, useState } from "react";
+import CreateRecurringPayment from "./createRecurringPayment";
 import AddNewLink from "./newLink";
 import SendMoney from "./sendMoney";
-import CreateRecurringPayment from "./createRecurringPayment";
-import axios from "axios";
-import Image from "next/image";
 // import SuggestBank from "./suggestBank";
 
+import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
+import { ChevronDownIcon } from "@heroicons/react/20/solid";
 export default function Users() {
   const [clients, setClients] = useState([]);
   const [open, setOpen] = useState(false);
@@ -122,7 +124,10 @@ export default function Users() {
                       </td>
                       <td className=" z-50 py-4 pl-3 pr-4 flex gap-x-3 text-right text-sm font-medium sm:pr-0">
                         <SendMoney account={person} />
-                        <CreateRecurringPayment account={person} /> 
+                        <CreateRecurringPayment account={person} />
+                        {person?.statements && (
+                          <Dropdown account={person} id={person.id} />
+                        )}
                         {/* <ActionButtons
                           items={[
                             {
@@ -147,3 +152,86 @@ export default function Users() {
     </>
   );
 }
+
+export function Dropdown({ account, id }) {
+  console.log(account);
+  const handleDownload = async (value) => {
+    const { data } = await axios.post(
+      "/api/statements",
+      {
+        id,
+        statement_id: value.statement_id,
+      },
+      {
+        responseType: "blob",
+      }
+    );
+    const filename = `${account.name}-${value.month}-${value.year}`;
+    await downloadPDF(data, filename);
+  };
+  return (
+    <Menu as="div" className="relative inline-block text-left">
+      <div>
+        <MenuButton className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+          Statements
+          <ChevronDownIcon
+            aria-hidden="true"
+            className="-mr-1 size-5 text-gray-400"
+          />
+        </MenuButton>
+      </div>
+
+      <MenuItems
+        transition
+        className="absolute max-h-[300px] overflow-y-auto right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black/5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
+      >
+        {account.statements.map((st) => (
+          <MenuItem
+            key={st.statement_id}
+            onClick={() => handleDownload(st)}
+            className="group"
+          >
+            <a
+              href="#"
+              className="group flex items-center px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900 data-[focus]:outline-none"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="size-4 text-gray-600 mr-1"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="m9 13.5 3 3m0 0 3-3m-3 3v-6m1.06-4.19-2.12-2.12a1.5 1.5 0 0 0-1.061-.44H4.5A2.25 2.25 0 0 0 2.25 6v12a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9a2.25 2.25 0 0 0-2.25-2.25h-5.379a1.5 1.5 0 0 1-1.06-.44Z"
+                />
+              </svg>
+
+              {format(new Date(st?.year, st?.month - 1), "MMMM, yyyy")}
+            </a>
+          </MenuItem>
+        ))}
+      </MenuItems>
+    </Menu>
+  );
+}
+
+const downloadPDF = async (data, filename) => {
+  try {
+    const url = window.URL.createObjectURL(new Blob([data]));
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", `${filename}.pdf`);
+    document.body.appendChild(link);
+    link.click();
+
+    // Clean up
+    link.remove();
+    window.URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error("Error fetching PDF:", error);
+  }
+};
