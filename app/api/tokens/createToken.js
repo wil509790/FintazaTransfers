@@ -5,7 +5,7 @@ import {
   plaidSecret,
 } from "@/app/services/plaidConfig";
 import axios from "axios";
-import { addDays, format, subYears } from "date-fns";
+import { addDays, format, subDays, subYears } from "date-fns";
 
 export const createLinkToken = async (products) => {
   try {
@@ -21,7 +21,7 @@ export const createLinkToken = async (products) => {
       },
       statements: {
         start_date: format(subYears(addDays(new Date(), 1), 2), 'yyyy-MM-dd'),
-        end_date: format(new Date(), 'yyyy-MM-dd')
+        end_date: format(subDays(new Date(), 1), 'yyyy-MM-dd')
       },
       additional_consented_products: ["auth"],
 

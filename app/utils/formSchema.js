@@ -17,4 +17,9 @@ export const RECURRING_PAYMENT_SCHEMA = yup.object({
   frequency: yup.string().required("Frequency is required"),
   startDate: yup.string().required("Start Date is required"),
   endDate: yup.string().required("End Date is required"),
+  number_of_installments: yup
+    .number()
+    .typeError("Invalid value, must be number")
+    .moreThan(0, "Installments must be at least 1")
+    .required("Installments is required"),
 });

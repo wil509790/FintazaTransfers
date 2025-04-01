@@ -5,13 +5,7 @@ import {
 } from "@/app/services/plaidConfig";
 import { createClient } from "@/app/utils/supabase/server";
 import axios from "axios";
-import {
-  addMonths,
-  addWeeks,
-  addYears,
-  format,
-  isBefore
-} from "date-fns";
+import { addMonths, addWeeks, addYears, format, isBefore } from "date-fns";
 import { cookies } from "next/headers";
 import { v4 as uuidv4 } from "uuid";
 import getAccountBalance from "../accounts/getAccountBalance";
@@ -76,6 +70,10 @@ export default async function makeRecurringPayment(values) {
 
   if (data?.decision === "approved") {
     await supabase
+      .from("clients")
+      .update({ number_of_installments: values.number_of_installments })
+      .eq("id", client.id);
+    await supabase
       .from("transactions")
       .insert({ client_id: client?.id, transaction_id });
     signalDecisionReport(transaction_id);
@@ -134,24 +132,23 @@ function calculateInstallments(startDate, endDate, frequency) {
   let end = new Date(endDate);
   let installments = 0;
 
-  // Frequency based logic
   switch (frequency) {
     case "weekly":
-      while (isBefore(start, end)) {
+      while (isBefore(start, end) || start.getTime() === end.getTime()) {
         installments++;
-        start = addWeeks(start, 1); // Move to next week
+        start = addWeeks(start, 1);
       }
       break;
     case "bi-weekly":
-      while (isBefore(start, end)) {
+      while (isBefore(start, end) || start.getTime() === end.getTime()) {
         installments++;
-        start = addWeeks(start, 2); // Move to next bi-week
+        start = addWeeks(start, 2);
       }
       break;
     case "monthly":
-      while (isBefore(start, end)) {
+      while (isBefore(start, end) || start.getTime() === end.getTime()) {
         installments++;
-        start = addMonths(start, 1); // Move to next month
+        start = addMonths(start, 1);
       }
       break;
     default:
@@ -159,7 +156,7 @@ function calculateInstallments(startDate, endDate, frequency) {
         "Invalid frequency. Use 'weekly', 'bi-weekly', or 'monthly'."
       );
   }
-console.log({installments})
+  console.log({installments})
   if (installments > 24) {
     return "The maximum number of installement is 24, please select an earlier End Date";
   }
