@@ -37,7 +37,7 @@ export default async function makeRecurringPayment(values) {
   // const currentBalance = await getAccountBalance(client?.accessToken, [
   //   client.accountId,
   // ]);
-  // if (currentBalance < Number(values?.amount)) {
+  // if (currentBalance < Number(values?.amount)) { 
   //   return "The select account has not sufficient balance";
   // }
 
