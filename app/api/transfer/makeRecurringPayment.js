@@ -58,7 +58,7 @@ export default async function makeRecurringPayment(values) {
     account_id: values.accountId,
     type: "debit",
     network: "same-day-ach",
-    ach_class: "ppd",
+    ach_class: "web",
     amount: Number(values.amount).toFixed(2),
     user: {
       legal_name: client?.name,
