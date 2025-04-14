@@ -20,12 +20,12 @@ export default function Sidebar({ user, children }) {
     <div className="flex">
       <div className="flex grow h-screen w-64 max-w-64 flex-col overflow-y-auto border-r border-gray-200 bg-white">
         <div className="flex h-16 shrink-0 justify-center  items-center ">
-          {/* <img
-            alt="Your Company"
-            src="/images/logo.png"
+        <img
+            alt="Fintaza Group"
+            src="/logo.webp"
             className="h-8 w-auto"
-          /> */}
-          Your Logo
+          />
+         
         </div>
         <nav className="flex flex-1 flex-col border-t  px-6 pt-2">
           <ul role="list" className="flex flex-1 flex-col gap-y-7">
