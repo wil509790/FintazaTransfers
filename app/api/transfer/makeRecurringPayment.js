@@ -97,7 +97,6 @@ const getSchedule = (frequency) => {
 
   if (frequency === "monthly") {
     let day = today.getDate();
-    console.log("day", day);
     if (day > 28) {
       day = 1;
     }
@@ -156,7 +155,6 @@ function calculateInstallments(startDate, endDate, frequency) {
         "Invalid frequency. Use 'weekly', 'bi-weekly', or 'monthly'."
       );
   }
-  console.log({installments})
   if (installments > 24) {
     return "The maximum number of installement is 24, please select an earlier End Date";
   }

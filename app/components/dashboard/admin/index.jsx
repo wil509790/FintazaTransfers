@@ -163,7 +163,6 @@ export default function Users() {
 }
 
 export function Dropdown({ account, id }) {
-  console.log(account);
   const handleDownload = async (value) => {
     const { data } = await axios.post(
       "/api/statements",

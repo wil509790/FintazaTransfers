@@ -42,5 +42,4 @@ export default async function sendMoneyToClient(values) {
       return auth?.decision_rationale?.description;
     }
   }
-  //   console.log("cliet", auth);
 }
