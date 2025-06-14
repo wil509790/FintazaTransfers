@@ -8,9 +8,6 @@ import axios from "axios";
 import { addMonths, addWeeks, addYears, format, isBefore } from "date-fns";
 import { cookies } from "next/headers";
 import { v4 as uuidv4 } from "uuid";
-import getAccountBalance from "../accounts/getAccountBalance";
-import signalDecisionReport from "./signal/decisionReport";
-import evaluateSignal from "./signal/evaluate";
 
 export default async function makeRecurringPayment(values) {
   const cookie = cookies();
@@ -41,15 +38,15 @@ export default async function makeRecurringPayment(values) {
   //   return "The select account has not sufficient balance";
   // }
 
-  const evaluate = await evaluateSignal({
-    access_token: client?.accessToken,
-    account_id: client?.accountId,
-    amount: Number(values.amount),
-    client_transaction_id: transaction_id,
-  });
-  if (evaluate !== "success") {
-    return evaluate;
-  }
+  // const evaluate = await evaluateSignal({
+  //   access_token: client?.accessToken,
+  //   account_id: client?.accountId,
+  //   amount: Number(values.amount),
+  //   client_transaction_id: transaction_id,
+  // });
+  // if (evaluate !== "success") {
+  //   return evaluate;
+  // }
 
   let { data } = await axios.post(`${plaidBaseUrl}/transfer/recurring/create`, {
     client_id: plaidClient,
@@ -76,7 +73,7 @@ export default async function makeRecurringPayment(values) {
     await supabase
       .from("transactions")
       .insert({ client_id: client?.id, transaction_id });
-    signalDecisionReport(transaction_id);
+    // signalDecisionReport(transaction_id);
     return 200;
   } else {
     return data?.decision_rationale?.description;

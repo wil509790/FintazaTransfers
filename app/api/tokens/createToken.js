@@ -14,7 +14,7 @@ export const createLinkToken = async (products) => {
       secret: plaidSecret,
       client_name: plaidClientName,
       language: "en",
-      products: ["transfer", "signal", "statements"],
+      products: ["transfer", "statements"],
       country_codes: ["US"],
       user: {
         client_user_id: plaidClient,
