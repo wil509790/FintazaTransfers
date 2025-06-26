@@ -21,6 +21,8 @@ export default async function makeRecurringPayment(values) {
   if (installments !== "success") {
     return installments;
   }
+try{
+
 
   const { data: client, error } = await supabase
     .from("clients")
@@ -34,6 +36,8 @@ export default async function makeRecurringPayment(values) {
   // const currentBalance = await getAccountBalance(client?.accessToken, [
   //   client.accountId,
   // ]);
+  // console.log("Current balance:", currentBalance);
+  // return
   // if (currentBalance < Number(values?.amount)) { 
   //   return "The select account has not sufficient balance";
   // }
@@ -65,7 +69,8 @@ export default async function makeRecurringPayment(values) {
     idempotency_key: transaction_id,
   });
 
-  if (data?.decision === "approved") {
+  // console.log("Recurring payment data:", data);
+  // if (data?.decision === "approved") {
     await supabase
       .from("clients")
       .update({ number_of_installments: values.number_of_installments })
@@ -75,9 +80,14 @@ export default async function makeRecurringPayment(values) {
       .insert({ client_id: client?.id, transaction_id });
     // signalDecisionReport(transaction_id);
     return 200;
-  } else {
-    return data?.decision_rationale?.description;
-  }
+  // } else {
+  //   return data?.decision_rationale?.description;
+  // }
+}
+catch (error) {
+  console.error("Error making recurring payment:", error);
+  return error?.message || "An error occurred while making the recurring payment.";
+}
 }
 
 const getSchedule = (frequency) => {
